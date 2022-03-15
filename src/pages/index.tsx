@@ -15,7 +15,6 @@ const Home: NextPage = () => {
   //Fetch Data (SupaBase)
 
   const [allCases, setAllCases] = useState<ReactNode>([]);
-  const [searchValue, setSearchValue] = useState<number[]>()
 
   async function handleFetchAllCases() {
     const { data } = await api
@@ -48,7 +47,14 @@ const Home: NextPage = () => {
     },
   ]
 
-  const [content, setContent] = useState("E ae seus batata")
+  const [content, setContent] = useState("")
+
+  const [inputValue, setInputValue] = useState('')
+  
+  const handleInputChange = (event: any) => {
+    setInputValue(event.target.value);
+    console.log(inputValue)
+  }
 
   return (
     <div className={styles.MainContainer}>
@@ -61,7 +67,7 @@ const Home: NextPage = () => {
           color="primary"
           min={0}
           max={1000}
-          onChange={event => setSearchValue(event.target.value)}
+          onChange={handleInputChange}
         />
         <MapChart setTooltipContent={setContent} />
         <ReactTooltip>{content}</ReactTooltip>
