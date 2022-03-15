@@ -1,26 +1,15 @@
 import { NextPage } from "next";
 import { ReactNode, useState } from "react";
-
 import { Slider } from "@mui/material";
+import ReactTooltip from "react-tooltip";
+
+import MapChart from '../components/worldmap/index'
 
 //Internal Styles
 import styles from "./home.module.scss";
 
 //Internal Services
 import { api } from "../services/api";
-
-type CountryCaseDataProps = {
-  location: string;
-  date: Date;
-  variant: string;
-  num_sequences: number;
-  perc_sequences: number;
-  num_sequences_total: number;
-};
-
-type SliderDataValue = {
-  value: any[]
-}
 
 const Home: NextPage = () => {
   //Fetch Data (SupaBase)
@@ -31,25 +20,51 @@ const Home: NextPage = () => {
   async function handleFetchAllCases() {
     const { data } = await api
       .from("cases")
-      .select();
+      .select()
 
     setAllCases(data);
-    console.log(data);
   }
 
-  console.log(searchValue)
+  const marks = [
+    {
+      value: 0,
+      label: 'Jan/2020',
+    },
+    {
+      value: 250,
+      label: 'Jul/2020',
+    },
+    {
+      value: 500,
+      label: 'Jan/2021',
+    },
+    {
+      value: 750,
+      label: 'Jul/2021',
+    },
+    {
+      value: 1000,
+      label: 'Jan/2022',
+    },
+  ]
+
+  const [content, setContent] = useState("E ae seus batata")
 
   return (
     <div className={styles.MainContainer}>
       <h1 className={styles.MainTitle}>Covid Daily Cases</h1>
       <div className={styles.MainContent}>
         <Slider
-          defaultValue={[20, 1000]}
-          color="secondary"
-          min={1}
+          defaultValue={[0, 1000]}
+          marks={marks}
+          valueLabelDisplay="auto"
+          color="primary"
+          min={0}
           max={1000}
-          onChange={e => setSearchValue(e.target.value)}
+          onChange={event => setSearchValue(event.target.value)}
         />
+        <MapChart setTooltipContent={setContent} />
+        <ReactTooltip>{content}</ReactTooltip>
       </div>
     </div>
   );
