@@ -1,0 +1,19 @@
+.MainContainer {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.MainTitle {
+    font-family: Roboto, sans-serif;       
+    font-weight: 500;
+    font-size: 2.5rem;
+}
+
+.MainContent {
+    height: 100%;
+    max-height: 1080px;
+
+    margin:4rem 6rem;
+}
