@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { ReactNode, useState } from "react";
+import { useEffect, useState } from "react";
 import { Slider } from "@mui/material";
 import ReactTooltip from "react-tooltip";
 
@@ -7,23 +7,9 @@ import MapChart from '../components/worldmap/index'
 
 //Internal Styles
 import styles from "./home.module.scss";
-
-//Internal Services
 import { api } from "../services/api";
 
 const Home: NextPage = () => {
-  //Fetch Data (SupaBase)
-
-  const [allCases, setAllCases] = useState<ReactNode>([]);
-
-  async function handleFetchAllCases() {
-    const { data } = await api
-      .from("cases")
-      .select()
-
-    setAllCases(data);
-  }
-
   const marks = [
     {
       value: 0,
@@ -47,13 +33,30 @@ const Home: NextPage = () => {
     },
   ]
 
-  const [content, setContent] = useState("")
+  // const { data, error } = useFetch(NAME)
 
+  const [tooltipContent, setTooltipContent] = useState('')
   const [inputValue, setInputValue] = useState('')
+
+  const [location, setLocation] = useState('')
+
+  async function handleLocationSelect() {
+    const { data } = await api
+      .from("cases")
+      .select("location, date, variant, num_sequences, perc_sequences, num_sequences_total")
+      .match({ location: `${location}` })
+      .match({ date: "2020-05-11" });
+
+      console.log(data)
+  }
+
+  useEffect(() => {
+    console.log(location)
+  }, [location])
   
+  //Verificar tipo correto
   const handleInputChange = (event: any) => {
     setInputValue(event.target.value);
-    console.log(inputValue)
   }
 
   return (
@@ -69,8 +72,9 @@ const Home: NextPage = () => {
           max={1000}
           onChange={handleInputChange}
         />
-        <MapChart setTooltipContent={setContent} />
-        <ReactTooltip>{content}</ReactTooltip>
+        <MapChart setTooltipContent={setTooltipContent} setLocation={setLocation} />
+        <ReactTooltip>{tooltipContent}</ReactTooltip>
+        <button onClick={handleLocationSelect}>Test</button>
       </div>
     </div>
   );

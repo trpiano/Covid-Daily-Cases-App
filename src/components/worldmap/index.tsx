@@ -5,28 +5,27 @@ import {
   Geography
 } from "react-simple-maps";
 
-type SetToolTipContentProps = {
-    setTooltipContent: any,
+import geo from '../../services/database/world-110m.json'
+
+//Verificar Tipo correto
+type SetValueProps = {
+  setTooltipContent: any,
+  setLocation: any,
 }
 
-const geoUrl =
-  "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
-
-const rounded = (num : number) => {
-  if (num > 1000000000) {
-    return Math.round(num / 100000000) / 10 + "Bn";
-  } else if (num > 1000000) {
+const rounded = (num: number) => {
+  if (num > 1000000) {
     return Math.round(num / 100000) / 10 + "M";
   } else {
     return Math.round(num / 100) / 10 + "K";
   }
 };
 
-const MapChart = ({ setTooltipContent }: SetToolTipContentProps) => {
+const MapChart = ({ setTooltipContent, setLocation }: SetValueProps) => {
   return (
     <>
       <ComposableMap data-tip="" projectionConfig={{ scale: 200 }}>
-          <Geographies geography={geoUrl}>
+          <Geographies geography={geo}>
             {({ geographies }) =>
               geographies.map(geo => (
                 <Geography
@@ -34,29 +33,30 @@ const MapChart = ({ setTooltipContent }: SetToolTipContentProps) => {
                   geography={geo}
                   onMouseEnter={() => {
                     const { NAME, POP_EST } = geo.properties;
-                    setTooltipContent(`${NAME} — ${rounded(POP_EST)}`);
+                    setTooltipContent(`${NAME} - ${rounded(POP_EST)}`);
+                    setLocation(NAME)
                   }}
                   onMouseLeave={() => {
                     setTooltipContent("");
                   }}
                   style={{
                     default: {
-                      fill: "#D6D6DA",
-                      outline: "none"
+                      fill: "#c1c1c1",
+                      outline: "none",
+                      stroke: "#909090",
+                      strokeWidth:'0.5',
                     },
                     hover: {
-                      fill: "#999999",
-                      outline: "none"
+                      fill: "#505050",
+                      outline: "none",
                     },
                     pressed: {
                       fill: "#999999",
-                      outline: "none"
+                      outline: "none",
                     }
                   }}
                 />
               ))
-
-              
             }
           </Geographies>
       </ComposableMap>
