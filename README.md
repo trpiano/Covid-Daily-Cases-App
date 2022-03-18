@@ -2,25 +2,21 @@
   <h2>Covid Daily Cases</h2>
 </div>
 
-<br />
-<br />
-
 <p align="center">
   <a href="https://www.linkedin.com/in/timoteopiano/">
     <img alt="Made by" src="https://img.shields.io/badge/made%20by-Timoteo%20Piano-%BD93EC">
   </a>
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/trpiano/ig.news?color=%BD93EC">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/trpiano/Covid-Daily-Cases-App?color=%BD93EC">
   <a href="https://github.com/trpiano/ig.news/commits/master">
-    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/trpiano/ig.news?color=%BD93EC">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/trpiano/Covid-Daily-Cases-App?color=%BD93EC">
   </a>
-  <img alt="GitHub" src="https://img.shields.io/github/license/trpiano/ig.news?color=%BD93EC">
 </p>
 
 ## This is a challenge by [Coodesh](https://coodesh.com/)
 
 ## About
 
-This application aims to propose a content subscription service, thus being part of the paid content and part of it free. Where the user performs social authentication with GitHub.
+This application aims to measure the number of cases of covid between the selected dates in each country on the selected dates.
 
 ## Technologies
 
