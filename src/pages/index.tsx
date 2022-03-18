@@ -1,6 +1,7 @@
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Slider } from "@mui/material";
+import Head from "next/head";
 import ReactTooltip from "react-tooltip";
 
 import MapChart from '../components/worldmap/index'
@@ -8,6 +9,9 @@ import MapChart from '../components/worldmap/index'
 //Internal Styles
 import styles from "./home.module.scss";
 import { api } from "../services/api";
+import { queryClient } from "../services/queryClient";
+import { timeDay } from "d3-time";
+import moment from "moment";
 
 const Home: NextPage = () => {
   const marks = [
@@ -16,43 +20,47 @@ const Home: NextPage = () => {
       label: 'Jan/2020',
     },
     {
-      value: 250,
+      value: 273,
       label: 'Jul/2020',
     },
     {
-      value: 500,
+      value: 546,
       label: 'Jan/2021',
     },
     {
-      value: 750,
+      value: 818,
       label: 'Jul/2021',
     },
     {
-      value: 1000,
+      value: 1091,
       label: 'Jan/2022',
     },
   ]
 
-  // const { data, error } = useFetch(NAME)
+  const startDate = new Date("2019-01-02")
+  const endDate = new Date("2021-12-28")
+
+  const startDateFormated = moment.utc(startDate).format('YYYY-MM-DD')
+  const endDateFormated = moment.utc(endDate).format('YYYY-MM-DD')
+
+  const TotalDays = timeDay.count(startDate, endDate)
+  const DateRange = timeDay.range(startDate, startDate)
 
   const [tooltipContent, setTooltipContent] = useState('')
   const [inputValue, setInputValue] = useState('')
 
   const [location, setLocation] = useState('')
+  const [covidCasesData, setCovidCasesData] = useState<ReactNode>([])
 
   async function handleLocationSelect() {
     const { data } = await api
       .from("cases")
-      .select("location, date, variant, num_sequences, perc_sequences, num_sequences_total")
+      .select()
       .match({ location: `${location}` })
       .match({ date: "2020-05-11" });
 
-      console.log(data)
+      setCovidCasesData(data)
   }
-
-  useEffect(() => {
-    console.log(location)
-  }, [location])
   
   //Verificar tipo correto
   const handleInputChange = (event: any) => {
@@ -60,23 +68,28 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className={styles.MainContainer}>
-      <h1 className={styles.MainTitle}>Covid Daily Cases</h1>
-      <div className={styles.MainContent}>
-        <Slider
-          defaultValue={[0, 1000]}
-          marks={marks}
-          valueLabelDisplay="auto"
-          color="primary"
-          min={0}
-          max={1000}
-          onChange={handleInputChange}
-        />
-        <MapChart setTooltipContent={setTooltipContent} setLocation={setLocation} />
-        <ReactTooltip>{tooltipContent}</ReactTooltip>
-        <button onClick={handleLocationSelect}>Test</button>
+    <>
+      <Head>
+        <title>Covid Daily Cases</title>
+      </Head>
+
+      <div className={styles.MainContainer}>
+        <h1 className={styles.MainTitle}>Covid Daily Cases</h1>
+        <div className={styles.MainContent}>
+          <Slider
+            defaultValue={[0, TotalDays]}
+            marks={marks}
+            valueLabelDisplay="auto"
+            color="primary"
+            min={0}
+            max={TotalDays}
+            onChange={handleInputChange}
+          />
+          <MapChart handleLocationSelect={handleLocationSelect} setTooltipContent={setTooltipContent} setLocation={setLocation} setCovidCasesData={setCovidCasesData} />
+          <ReactTooltip>{tooltipContent}</ReactTooltip>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

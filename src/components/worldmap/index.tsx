@@ -11,6 +11,8 @@ import geo from '../../services/database/world-110m.json'
 type SetValueProps = {
   setTooltipContent: any,
   setLocation: any,
+  handleLocationSelect: any
+  setCovidCasesData: any,
 }
 
 const rounded = (num: number) => {
@@ -21,7 +23,7 @@ const rounded = (num: number) => {
   }
 };
 
-const MapChart = ({ setTooltipContent, setLocation }: SetValueProps) => {
+const MapChart = ({ setTooltipContent, setLocation, handleLocationSelect, setCovidCasesData }: SetValueProps) => {
   return (
     <>
       <ComposableMap data-tip="" projectionConfig={{ scale: 200 }}>
@@ -33,11 +35,13 @@ const MapChart = ({ setTooltipContent, setLocation }: SetValueProps) => {
                   geography={geo}
                   onMouseEnter={() => {
                     const { NAME, POP_EST } = geo.properties;
-                    setTooltipContent(`${NAME} - ${rounded(POP_EST)}`);
                     setLocation(NAME)
+                    setTooltipContent(`${NAME} - ${rounded(POP_EST)}`);
+                    handleLocationSelect()
                   }}
                   onMouseLeave={() => {
-                    setTooltipContent("");
+                    setTooltipContent("")
+                    setCovidCasesData([]);
                   }}
                   style={{
                     default: {
